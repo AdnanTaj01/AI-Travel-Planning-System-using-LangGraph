@@ -1,3 +1,27 @@
+# AI Travel Planning System using LangGraph Results
+
+## Landing_gage
+![alt text](Landing_gage.PNG)
+
+## Prompt
+![alt text](Prompt.PNG)
+
+## Agent_pipeline
+![alt text](Agent_pipeline.PNG)
+
+## Hotel_agent
+![alt text](Hotel_agent.PNG)
+
+## Itinery_agent
+![alt text](Itenery_agent.PNG)
+
+## Final_agent
+![alt text](Final_agent.PNG)
+
+## Download_final_plane
+![alt text](Download_final_plane.PNG)
+
+
 # AI Travel Planning System using LangGraph
 
 A multi-agent travel planning application built with LangGraph, Groq, and Tavily. The system takes a user travel request, gathers flight and hotel information, generates an itinerary, and presents a final travel plan through a Streamlit interface.
