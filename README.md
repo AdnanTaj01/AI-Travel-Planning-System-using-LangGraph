@@ -1,156 +1,168 @@
 # AI Travel Planning System using LangGraph
 
-This project is a Real-World Multi-Agent AI System built using LangGraph.
+A multi-agent travel planning application built with LangGraph, Groq, and Tavily. The system takes a user travel request, gathers flight and hotel information, generates an itinerary, and presents a final travel plan through a Streamlit interface.
 
-The system uses 4 AI agents that work together to plan a complete trip automatically.
+## Overview
+
+This project demonstrates a simple LangGraph workflow with four stages:
+
+1. Flight agent searches for flight-related information
+2. Hotel agent searches for lodging options
+3. Itinerary agent creates a travel plan
+4. Final agent composes the final response for the user
+
+The app also stores memory in PostgreSQL using LangGraph's checkpointing support.
 
 ## Features
 
-- ✈️ Flight Search Agent
-- 🏨 Hotel Search Agent
-- 🗓️ Itinerary Planning Agent
-- 🤖 Final Response Agent
-- 🧠 Memory using PostgreSQL
-- 🌐 Real-time API Integration
-- 💻 Streamlit Web Interface
+- ✈️ Flight-search agent
+- 🏨 Hotel-search agent
+- 🗓️ Itinerary generation using LLM
+- 🤖 Final travel response synthesis
+- 🧠 PostgreSQL memory/checkpoint support
+- 🌐 Streamlit web UI
+- 🔎 Real-time web search via Tavily
 
----
+## Tech Stack
 
-# Tech Stack
-
+- Python
 - LangGraph
 - LangChain
 - Groq
-- Llama 3.3 70B
+- Tavily API
 - PostgreSQL
 - Streamlit
-- Tavily API
-- AviationStack API
 
----
+## Project Structure
 
-# Step 1: Create Python Environment
+```text
+.
+├── main.py
+├── frontend.py
+├── tools/
+│   ├── flight_tool.py
+│   └── tavily_tool.py
+├── travel_plans/
+├── .env
+├── README.md
+└── requirements.txt (optional, if added later)
+```
 
-Open the terminal inside the project folder and run:
+## Prerequisites
 
-		python -m venv langgraph_env3
+- Python 3.10+
+- PostgreSQL installed and running
+- Groq API key
+- Tavily API key
 
+## 1) Create and activate a virtual environment
 
-Now activate the environment:
+```bash
+python -m venv .venv
+```
 
-#### Windows
+On Windows:
 
-		langgraph_env3\Scripts\activate
+```powershell
+.venv\Scripts\activate
+```
 
+On macOS/Linux:
 
-#### YouTube Tuturial (Hindi) - https://youtu.be/ctHby5vhDqg
+```bash
+source .venv/bin/activate
+```
 
-#### YouTube Tuturial (English) -  https://youtu.be/_5XF5CCnbDk
+## 2) Install dependencies
 
----
+```bash
+pip install langgraph langchain langchain-groq langchain-community langchain-core python-dotenv streamlit tavily-python psycopg[binary,pool] langgraph-checkpoint-postgres
+```
 
-# Step 2: Install Dependencies
+If you prefer a more explicit install for PostgreSQL support:
 
-Run the following command:
+```bash
+pip install "psycopg[binary,pool]"
+pip install langgraph-checkpoint-postgres
+```
 
-		pip install langgraph langchain langchain-openai langchain-groq langchain-community langchain-tavily psycopg[binary] psycopg_pool python-dotenv tavily-python requests streamlit
+## 3) Install and start PostgreSQL
 
-		pip install -U "psycopg[binary,pool]"  langgraph-checkpoint-postgres
+Download PostgreSQL from: https://www.postgresql.org/download/
 
----
+After installation, create a database:
 
-# Step 3: Install PostgreSQL
-
-Download and install PostgreSQL: https://www.postgresql.org/download/
-
-⚠️ Important:
-While installing PostgreSQL, remember:
-- PostgreSQL Password
-- Port Number
-
-You will need them later while creating the database connection string.
-
----
-
-# Step 4: Create Database
-
-Open PostgreSQL and run:
-
+```sql
 CREATE DATABASE langgraph_memory_demo;
+```
 
+## 4) Create a .env file
 
----
+Create a file named `.env` in the project root with the following values:
 
-# Step 5: Setup `.env` File
-
-Create a `.env` file inside the project folder.
-
-Add the following keys:
-
+```env
 GROQ_API_KEY=your_groq_api_key
-
 TAVILY_API_KEY=your_tavily_api_key
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/langgraph_memory_demo
+```
 
-AVIATIONSTACK_API_KEY=your_aviationstack_api_key
+> Update the password and port to match your local PostgreSQL setup.
 
-DATABASE_URL=postgresql://postgres:postgres@localhost:5433/langgraph_memory_demo
+## 5) Get API keys
 
+- Groq: https://console.groq.com
+- Tavily: https://www.tavily.com/
 
----
+## 6) Run the app
 
-# Step 6: Get API Keys
+### Terminal mode
 
-## Get Groq API Key
+```bash
+python main.py
+```
 
-https://console.groq.com
+This runs the LangGraph workflow in the terminal and prints the final travel response.
 
----
+### Streamlit app
 
-## Get Tavily API Key
+```bash
+streamlit run frontend.py
+```
 
-https://tavily.com
-  
----
+This launches the web interface for creating travel requests.
 
-## Get AviationStack API Key
+## Example prompts
 
-https://aviationstack.com
+```text
+Plan a 7-day trip to Japan with flights, hotels, and sightseeing under 2 lakhs.
 
----
+Create a 5-day trip to Bali including flights and budget-friendly hotels.
 
-# Step 7: Run the Application
+Plan a weekend vacation to Dubai with flights and luxury stays.
+```
 
-#### Run Multi-Agent System in Terminal
+## How the workflow works
 
-		python main.py
+- The user enters a travel query
+- `flight_agent` searches flight information
+- `hotel_agent` searches hotel information
+- `itinerary_agent` builds a trip plan using the results
+- `final_agent` generates a polished travel response
+- PostgreSQL stores checkpoints and conversation memory for the LangGraph state
 
+## Notes
 
-This will test the multi-agent system through the terminal.
+- The current flight tool uses Tavily search results to collect flight-related information.
+- The hotel tool also uses Tavily search results.
+- The model in `main.py` is configured as `openai/gpt-oss-120b` on Groq, so the Groq API must be valid and accessible.
 
----
+## Troubleshooting
 
-#### Run Streamlit Web App
+- If PostgreSQL connection fails, confirm the database exists and the `DATABASE_URL` is correct.
+- If the app cannot fetch results, verify your `TAVILY_API_KEY` and `GROQ_API_KEY` values.
+- If Streamlit fails to start, ensure the environment is activated and dependencies are installed.
 
+## License
 
-		streamlit run frontend.py
-
-
-This will launch the Multi-Agent AI web application.
-
----
-
-#### Example Prompt
-
-Plan a complete 7 days Japan trip including flights, hotels and sightseeing under 2 lakhs.
-
-
----
-
-# Project Workflow
-
-1. Flight Agent searches flights
-2. Hotel Agent searches hotels
-3. Itinerary Agent creates travel plan
-4. Final Agent combines everything together
-5. PostgreSQL stores conversation memory
+This project is for educational and demonstration purposes.
 
